@@ -1,0 +1,66 @@
+﻿@model GestorInventario.ViewModels.ItemViewModel
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #itemsContainer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .item-card {
+        background-color: #3123AD;
+        color: #E4B57E;
+        text-align: center;
+        padding: 10px;
+        box-shadow: 2px 2px 5px #ccc;
+        width: calc(50% - 20px);
+        height: 150px;
+        border: 1px solid #63607D;
+        margin: 10px;
+        float: left;
+        display: inline-block;
+    }
+
+        .item-card p {
+            margin: 10px 0;
+            font-weight: bold;
+        }
+</style>
+
+<div id="itemsContainer">
+</div>
+
+@section scripts
+{
+    <script>
+        var items = @Html.Raw(JsonConvert.SerializeObject(Model.items));
+        var itemsContainer = document.getElementById("itemsContainer");
+
+        var randomItems = [];
+        for (var i = 0; i < 2; i++) {
+            var randomIndex = Math.floor(Math.random() * items.length);
+
+            randomItems.push(items[randomIndex]);
+            items.splice(randomIndex, 1);
+        }
+
+        for (var i = 0; i < randomItems.length; i++) {
+            console.log(randomItems[i]);
+            var itemDiv = document.createElement("div");
+            itemDiv.classList.add("item-card");
+            var nameP = document.createElement("p");
+            nameP.innerHTML = "<a href='/Items/Detail/" + randomItems[i].Id + "'>" + randomItems[i].Name + "</a>";
+            var descriptionP = document.createElement("p");
+            descriptionP.innerText = randomItems[i].Description;
+            itemDiv.appendChild(nameP);
+            itemDiv.appendChild(descriptionP);
+            itemsContainer.appendChild(itemDiv);
+        }
+    </script>
+}
+
